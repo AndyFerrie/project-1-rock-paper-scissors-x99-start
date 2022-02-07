@@ -10,7 +10,9 @@ let playerOneMoveOneType,
     playerTwoMoveThreeType, 
     playerTwoMoveOneValue, 
     playerTwoMoveTwoValue, 
-    playerTwoMoveThreeValue;
+    playerTwoMoveThreeValue,
+    playerOneWins,
+    playerTwoWins;
 
 // A function called setPlayerMoves, which will take a string representing a player (in the form of 'Player One' or 'Player Two'), three move types, and three move values, and set the correct global move variables.
 
@@ -71,6 +73,8 @@ function getRoundWinner (roundNumber) {
             return getMoveWinner(playerOneMoveTwoType, playerOneMoveTwoValue, playerTwoMoveTwoType, playerTwoMoveTwoValue);
         case 3:
             return getMoveWinner(playerOneMoveThreeType, playerOneMoveThreeValue, playerTwoMoveThreeType, playerTwoMoveThreeValue);
+        default: 
+            return null;
     }
 }
 
@@ -113,14 +117,49 @@ function getMoveWinner (playerOneMoveType, playerOneMoveValue, playerTwoMoveType
 
 // A function called getGameWinner, which compares both player’s move types and values for the whole game and returns the appropriate winner ('Player One', 'Player Two', or 'Tie')
 
-function getGameWinner () {
-    if (!playerOneMoveOneType || !playerOneMoveTwoType || !playerOneMoveThreeTypeplayer || !playerOneMoveOneValue || !playerOneMoveTwoValue || playerOneMoveThreeValue ||!playerTwoMoveOneType || !playerTwoMoveTwoType ||!playerTwoMoveThreeType || !playerTwoMoveOneValue ||!playerTwoMoveTwoValue || !playerTwoMoveThreeValue) {
+function getGameWinner() {
+    if (!playerOneMoveOneType || !playerOneMoveTwoType || !playerOneMoveThreeType || !playerOneMoveOneValue || !playerOneMoveTwoValue || !playerOneMoveThreeValue ||!playerTwoMoveOneType || !playerTwoMoveTwoType || !playerTwoMoveThreeType || !playerTwoMoveOneValue ||!playerTwoMoveTwoValue || !playerTwoMoveThreeValue) {
         return null;
+    }
+
+    // set playerOneWins and playerTwoWins to 0
+
+    playerOneWins = 0;
+    playerTwoWins = 0;
+
+    const roundOneWinner = getRoundWinner(1);
+    const roundTwoWinner = getRoundWinner(2);
+    const roundThreeWinner = getRoundWinner(3);
+
+    addWin(roundOneWinner);
+    addWin(roundTwoWinner);
+    addWin(roundThreeWinner);
+    if (playerOneWins > playerTwoWins) {
+        return 'Player One';
+    } else if (playerOneWins < playerTwoWins) {
+        return 'Player Two';
+    } else {
+        return 'Tie';
+    }
+}
+
+function addWin(winner) {
+    if (winner === 'Player One') {
+        playerOneWins = (playerOneWins + 1) || 1;
+    } else if (winner === 'Player Two') {
+        playerTwoWins = (playerTwoWins + 1) || 1;
     }
 }
 
 // Bonus: A function called setComputerMoves, which chooses three random moves for player two. The move type for each move should be completely random, and the move values should be random but add up to 99.
 
 function setComputerMoves () {
-
+    const moves = ['rock', 'paper', 'scissors'];
+    const moveOneType = moves[Math.floor(Math.random() * 3)];
+    const moveTwoType = moves[Math.floor(Math.random() * 3)];
+    const moveThreeType = moves[Math.floor(Math.random() * 3)];
+    const moveOneValue = Math.floor(Math.random() * 96) + 1;
+    const moveTwoValue = Math.floor(Math.random() * (97 - moveOneValue)) + 1;
+    const moveThreeValue = 99 - moveOneValue - moveTwoValue;
+    setPlayerMoves('Player Two', moveOneType, moveOneValue, moveTwoType, moveTwoValue, moveThreeType, moveThreeValue);
 }
